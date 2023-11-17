@@ -33,6 +33,15 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.stiend</groupId>
+			<artifactId>rpg.core</artifactId>
+			<version>1.0.0-dev.1</version>
+			<scope>system</scope>
+			<systemPath>
+				C:\Projects\maven\dependencies\rpg.core-1.0.0-dev.1.jar</systemPath>
+		</dependency>
 	</dependencies>
 
 	<build>
