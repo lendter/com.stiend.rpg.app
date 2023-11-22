@@ -1,8 +1,8 @@
 const BASE_URL = "http://localhost:8080/api/game";
 
-function init() {
-	let map = getRequest("/map");
-	
+async function init() {
+	let map = await getRequest("/map");
+	console.log(map);	
 }
 
 function createMap(){
@@ -13,10 +13,11 @@ function createMap(){
 }
 
 function getRequest(path) {
-	console.log("GET Request: " + path);
+	console.log("GET Request: " +BASE_URL+ path);
 	return new Promise(resolve => {
 		let request = new XMLHttpRequest();
 		request.open("GET", BASE_URL + path);
+		//request.setRequestHeader("Content-Type", "application/json");
 		request.send();
 		request.onload = function(result) {
 			console.log(result.target.response);
@@ -26,7 +27,7 @@ function getRequest(path) {
 }
 
 function putRequest(path, body){
-	console.log("PUT Request: "+ path);
+	console.log("PUT Request: "+ BASE_URL+path);
 	return new Promise(resolve => {
 		let request = new XMLHttpRequest();
 		request.open("PUT", BASE_URL + path);
@@ -40,7 +41,7 @@ function putRequest(path, body){
 }
 
 function postRequest(path, body) {
-	console.log("POST Request: "+ path);
+	console.log("POST Request: "+BASE_URL+ path);
 	return new Promise(resolve => {
 		let request = new XMLHttpRequest();
 		request.open("POST", BASE_URL + path);
