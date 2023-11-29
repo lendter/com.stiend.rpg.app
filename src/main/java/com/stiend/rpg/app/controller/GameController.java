@@ -1,6 +1,7 @@
 package com.stiend.rpg.app.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +18,9 @@ import physics.Position;
 public class GameController {
 	private Map map;
 	
-	@PutMapping ("/map")
+	@PostMapping ("/map")
 	public void createMap(@RequestBody MapConfiguration configuration) {
+		System.out.println(configuration.getSize());
 		this.map = new Map(configuration.getSize());
 	}
 	

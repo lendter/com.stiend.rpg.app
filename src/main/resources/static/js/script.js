@@ -7,9 +7,9 @@ async function init() {
 
 function createMap(){
 	let body = {
-		"size": 10
+		"size": 20
 	};
-	putRequest("/map", body);
+	postRequest("/map", body);
 }
 
 function getRequest(path) {
