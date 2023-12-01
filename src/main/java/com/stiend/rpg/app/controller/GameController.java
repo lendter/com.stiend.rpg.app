@@ -29,37 +29,38 @@ public class GameController {
 		return this.map;
 	}
 	
-	@PutMapping("/wall")
-	public void putWall(@RequestBody Position position) {
+	@PostMapping("/wall")
+	public void postWall(@RequestBody Position position) {
+		System.out.println(position.getY() + "  "+ position.getX());
 		this.map.getField(position).setWall(true);
 	}
 	
-	@PutMapping("/knight")
+	@PostMapping("/knight")
 	public void putKnight(@RequestBody Position position, @RequestBody Knight knight) {
 		putCharacter(position, knight);
 	}
 	
-	@PutMapping("/mercenary")
+	@PostMapping("/mercenary")
 	public void putMercenary(@RequestBody Position position, @RequestBody Mercenary mercenary) {
 		putCharacter(position, mercenary);
 	}
 	
-	@PutMapping("/sorcerer")
+	@PostMapping("/sorcerer")
 	public void putSorcerer(@RequestBody Position position, @RequestBody Sorcerer sorcerer) {
 		putCharacter(position, sorcerer);
 	}
 	
-	@PutMapping("/wizard")
+	@PostMapping("/wizard")
 	public void putWizard(@RequestBody Position position, @RequestBody Wizard wizard) {
 		putCharacter(position, wizard);
 	}
 	
-	@PutMapping("/monster")
+	@PostMapping("/monster")
 	public void putMonster(@RequestBody Position position, @RequestBody Monster monster) {
 		this.map.getField(position).setMonster(monster);
 	}
 	
-	public void putCharacter(@RequestBody Position position, @RequestBody PlayerCharacter character) {
+	public void putCharacter(Position position, PlayerCharacter character) {
 		this.map.getField(position).setCharacter(character);
 	}
 }

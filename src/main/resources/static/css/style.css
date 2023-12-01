@@ -1,0 +1,24 @@
+.field {
+	width: 30px;
+	height: 30px;
+	background-color: blue;
+	color: white;
+	border: 1px solid dimgrey;
+}
+
+.wall {
+	background-color: black;
+}
+
+.stack {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.horizontal {
+	justify-content: center;
+}
+
+.vertical {
+	align-items: center;	
+}
