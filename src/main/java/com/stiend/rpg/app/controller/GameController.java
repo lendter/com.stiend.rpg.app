@@ -35,6 +35,12 @@ public class GameController {
 		this.map.getField(position).setWall(true);
 	}
 	
+	@PostMapping("/playable")
+	public void postPlayable(@RequestBody Position position) {
+		System.out.println(position.getY() + "  "+ position.getX());
+		this.map.getField(position).setWall(false);
+	}
+	
 	@PostMapping("/knight")
 	public void putKnight(@RequestBody Position position, @RequestBody Knight knight) {
 		putCharacter(position, knight);
