@@ -1,13 +1,46 @@
 .field {
 	width: 30px;
 	height: 30px;
-	background-color: blue;
+	background-image: url("/img/floor.png");
+	background-size: contain;
 	color: white;
 	border: 1px solid dimgrey;
 }
 
 .wall {
-	background-color: black;
+	background-image: url("/img/wall.webp");
+}
+
+.monster{
+	background-image: url("/img/monster.jpg");	
+}
+
+.knight{
+	background-image: url("/img/knight.jpg");	
+}
+
+.mercenary{
+	background-image: url("/img/mercenary.jpg");	
+}
+
+.wizard{
+	background-image: url("/img/wizard.jpg");	
+}
+
+.sorcerer{
+	background-image: url("/img/sorcerer.jpg");	
+}
+
+.m-1{
+	margin: 1rem;
+}
+
+.d-flex{
+	display: flex;
+}
+
+#map-view{
+	width: 80%;
 }
 
 .stack {

@@ -2,12 +2,16 @@ package com.stiend.rpg.app.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.stiend.rpg.app.models.KnightConfiguration;
 import com.stiend.rpg.app.models.MapConfiguration;
+import com.stiend.rpg.app.models.MercenaryConfiguration;
+import com.stiend.rpg.app.models.MonsterConfiguration;
+import com.stiend.rpg.app.models.SorcererConfiguration;
+import com.stiend.rpg.app.models.WizardConfiguration;
 
 import character.*;
 import physics.Map;
@@ -42,31 +46,33 @@ public class GameController {
 	}
 	
 	@PostMapping("/knight")
-	public void putKnight(@RequestBody Position position, @RequestBody Knight knight) {
-		putCharacter(position, knight);
+	public void postKnight(@RequestBody KnightConfiguration config) {
+		postCharacter(config.getPosition(), config.getKnight());
 	}
 	
 	@PostMapping("/mercenary")
-	public void putMercenary(@RequestBody Position position, @RequestBody Mercenary mercenary) {
-		putCharacter(position, mercenary);
+	public void postMercenary(@RequestBody MercenaryConfiguration config) {
+		postCharacter(config.getPosition(), config.getMercenary());
 	}
 	
 	@PostMapping("/sorcerer")
-	public void putSorcerer(@RequestBody Position position, @RequestBody Sorcerer sorcerer) {
-		putCharacter(position, sorcerer);
+	public void postSorcerer(@RequestBody SorcererConfiguration config) {
+		postCharacter(config.getPosition(), config.getSorcerer());
 	}
 	
 	@PostMapping("/wizard")
-	public void putWizard(@RequestBody Position position, @RequestBody Wizard wizard) {
-		putCharacter(position, wizard);
+	public void postWizard(@RequestBody WizardConfiguration config) {
+		postCharacter(config.getPosition(), config.getWizard());
 	}
 	
 	@PostMapping("/monster")
-	public void putMonster(@RequestBody Position position, @RequestBody Monster monster) {
-		this.map.getField(position).setMonster(monster);
+	public void postMonster(@RequestBody MonsterConfiguration config) {
+		System.out.println(config.getMonster().getName());
+		this.map.getField(config.getPosition()).setMonster(config.getMonster());
 	}
 	
-	public void putCharacter(Position position, PlayerCharacter character) {
+	public void postCharacter(Position position, PlayerCharacter character) {
+		System.out.println(character.getName());
 		this.map.getField(position).setCharacter(character);
 	}
 }
