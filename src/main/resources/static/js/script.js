@@ -32,16 +32,22 @@ function fillMap(fields) {
 					if (field["wall"] === true) {
 						fieldDiv.children[0].classList.add("wall");
 					}
-					if(field["character"] != null){
+					if (field["character"] != null) {
 						let character = field["character"];
 						let type = character["type"].split(".")[1];
 						console.log(type);
-						fieldDiv.children[0].classList.add(type.toLowerCase());
+						let img = document.createElement("img");
+						img.src = "/img/" + type + "-noBackground.png";
+						img.className = "character";
+						fieldDiv.children[0].append(img);
 					}
-					if(field["monster"] != null){
-						fieldDiv.children[0].classList.add("monster");
+					if (field["monster"] != null) {
+						let img = document.createElement("img");
+						img.src = "/img/Goblin-noBackground.png";
+						img.className = "character";
+						fieldDiv.children[0].append(img);
 					}
-					
+
 				});
 			})
 			mapWrap.append(rowDiv);
@@ -73,7 +79,7 @@ async function addFieldAttribute(x, y, attribute, obj) {
 		}
 	}
 	await postRequest(attribute, body);
-	document.getElementById(x + ":" + y).children[0].classList.add(attribute);
+	window.location.reload();
 }
 
 async function removeFieldAttribute(x, y, attribute) {

@@ -7,12 +7,13 @@
 	border: 1px solid dimgrey;
 }
 
-.wall {
-	background-image: url("/img/wall.webp");
+.character{
+	width: 30px;
+	height: 30px;	
 }
 
-.monster{
-	background-image: url("/img/monster.jpg");	
+.wall {
+	background-image: url("/img/wall.webp");
 }
 
 .knight{
