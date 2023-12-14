@@ -45,7 +45,7 @@ function fillMap(fields) {
 					}
 					if (field["monster"] != null) {
 						let img = document.createElement("img");
-						img.src = "/img/Goblin-noBackground.png";
+						img.src = "/img/Monster-noBackground.png";
 						img.className = "character";
 						fieldDiv.children[0].append(img);
 					}
