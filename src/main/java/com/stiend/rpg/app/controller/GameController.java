@@ -6,10 +6,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.stiend.rpg.app.models.GameState;
 import com.stiend.rpg.app.models.KnightConfiguration;
 import com.stiend.rpg.app.models.MapConfiguration;
 import com.stiend.rpg.app.models.MercenaryConfiguration;
 import com.stiend.rpg.app.models.MonsterConfiguration;
+import com.stiend.rpg.app.models.RPGResponseEntity;
 import com.stiend.rpg.app.models.SorcererConfiguration;
 import com.stiend.rpg.app.models.WizardConfiguration;
 
@@ -20,29 +22,31 @@ import physics.Position;
 @RestController()
 @RequestMapping("/api/game")
 public class GameController {
-	private Map map;
+	private RPGResponseEntity responseEntity = new RPGResponseEntity();
 	
 	@PostMapping ("/map")
 	public void createMap(@RequestBody MapConfiguration configuration) {
 		System.out.println(configuration.getSize());
-		this.map = new Map(configuration.getSize());
+		Map map = new Map(configuration.getSize());
+		this.responseEntity.setMap(map);
+		this.responseEntity.setState(GameState.GAME_CREATION);
 	}
 	
-	@GetMapping("/map")
-	public Map getMap() {
-		return this.map;
+	@GetMapping("/info")
+	public RPGResponseEntity getInfo() {
+		return this.responseEntity;
 	}
 	
 	@PostMapping("/wall")
 	public void postWall(@RequestBody Position position) {
 		System.out.println(position.getY() + "  "+ position.getX());
-		this.map.getField(position).setWall(true);
+		this.responseEntity.getMap().getField(position).setWall(true);
 	}
 	
 	@PostMapping("/playable")
 	public void postPlayable(@RequestBody Position position) {
 		System.out.println(position.getY() + "  "+ position.getX());
-		this.map.getField(position).setWall(false);
+		this.responseEntity.getMap().getField(position).setWall(false);
 	}
 	
 	@PostMapping("/knight")
@@ -68,11 +72,11 @@ public class GameController {
 	@PostMapping("/monster")
 	public void postMonster(@RequestBody MonsterConfiguration config) {
 		System.out.println(config.getMonster().getName());
-		this.map.getField(config.getPosition()).setMonster(config.getMonster());
+		this.responseEntity.getMap().getField(config.getPosition()).setMonster(config.getMonster());
 	}
 	
 	public void postCharacter(Position position, PlayerCharacter character) {
 		System.out.println(character.getName());
-		this.map.getField(position).setCharacter(character);
+		this.responseEntity.getMap().getField(position).setCharacter(character);
 	}
 }
