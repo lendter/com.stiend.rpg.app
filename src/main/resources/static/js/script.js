@@ -3,8 +3,10 @@ const BASE_URL = "http://localhost:8080/api/game/";
 
 async function init() {
 	document.addEventListener("contextmenu", e => e.preventDefault(), false);
-	let map = await getRequest("map");
-	map = JSON.parse(map);
+	let responseEntity = await getRequest("info");
+	responseEntity = JSON.parse(responseEntity);
+	console.log(responseEntity);
+	let map = responseEntity["map"];
 	let mapView = document.getElementById("map-view");
 	let fields = map["fields"];
 	let mapWrap = await fillMap(fields);
@@ -77,9 +79,17 @@ async function addFieldAttribute(x, y, attribute, obj) {
 			"x": x,
 			"y": y
 		}
+		document.getElementById(x+":"+y).children[0].classList.add(attribute);
 	}
 	await postRequest(attribute, body);
-	window.location.reload();
+	if(obj != null){
+		let div = document.getElementById(x+":"+y);
+		let img = document.createElement("img");
+		const type = attribute.charAt(0).toUpperCase() + attribute.slice(1);
+		img.className = "character";
+		img.src = "/img/"+type+"-noBackground.png";
+		div.children[0].append(img);	
+	}
 }
 
 async function removeFieldAttribute(x, y, attribute) {
