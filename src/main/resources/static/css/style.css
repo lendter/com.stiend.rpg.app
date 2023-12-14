@@ -4,7 +4,7 @@
 	background-image: url("/img/floor.png");
 	background-size: contain;
 	color: white;
-	border: 1px solid dimgrey;
+	border: 0.5px solid black;
 }
 
 .character{
@@ -13,7 +13,7 @@
 }
 
 .wall {
-	background-image: url("/img/wall.webp");
+	background-image: url("/img/wall.jpg");
 }
 
 .knight{
