@@ -1,6 +1,5 @@
 const BASE_URL = "http://localhost:8080/api/game/";
 
-
 async function init() {
 	document.addEventListener("contextmenu", e => e.preventDefault(), false);
 	let responseEntity = await getRequest("info");
