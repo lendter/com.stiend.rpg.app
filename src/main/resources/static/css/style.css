@@ -70,3 +70,51 @@
 .vertical {
 	align-items: center;	
 }
+
+.open-btn {
+	border: 0;
+	padding: 5px 10px;
+	Font-size: 20px;
+	top: 0;
+	right: 0;
+	transition: .5s;
+	position: fixed;
+}
+
+.sidebar {
+	height: 100%;
+	width: 0;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	right: 0;
+	overflow-y: hidden;
+	overflow-x:hidden;
+	padding-top: 3em;
+	transition: 0.5s;
+}
+
+.sidebar .item{
+	padding: 5% 5% 5% 15%;
+	transition: 0.3s;
+}
+
+.sidebar .control-btn {
+	position: absolute;
+	top: 0;
+	right: 50%;
+	cursor: pointer;
+	font-size: 20px;
+}
+
+#main-content {
+	transition: margin-right .5s;
+	padding: 20px;
+}
+
+@media screen and (max-height: 450px) {
+	.sidebar {padding-top: 15px;}
+	.field {width: 15px; height: 15px;}
+	.highlight {width: 15px; height: 15px;}
+	.character {width: 15px; height: 15px;}
+}

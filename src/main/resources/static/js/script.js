@@ -207,3 +207,21 @@ function mockSorcerer() {
 function mockWizard() {
 	return { "name": "Dumbledore", "hp": 100, "intelligence": 30, "strength": 50, "constitution": 10, "dexterity": 15, "talent": null };
 }
+
+function sidebarOpen(){
+	document.getElementById('sidebar').style.width = "15%";
+	document.getElementById('main-content').style.marginRight = "15%";
+	var controller = document.getElementById('sidebar-control');
+	controller.innerHTML = ">";
+	controller.setAttribute("onclick", "sidebarClose()");
+	controller.style.right = "15%";
+}
+
+function sidebarClose() {
+	document.getElementById('sidebar').removeAttribute("style");
+	document.getElementById('main-content').removeAttribute("style");
+	var controller = document.getElementById('sidebar-control');
+	controller.innerHTML = "<";
+	controller.setAttribute("onclick", "sidebarOpen()");
+	controller.removeAttribute("style");
+}
