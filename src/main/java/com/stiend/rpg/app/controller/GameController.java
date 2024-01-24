@@ -49,7 +49,6 @@ public class GameController {
 		}catch(Exception e) {
 			return new ResponseEntity<HttpStatus>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
 	}
 
 	@PostMapping("/playable")

@@ -80,8 +80,10 @@ async function addFieldAttribute(x, y, attribute, obj) {
 		}
 		document.getElementById(x+":"+y).children[0].classList.add(attribute);
 	}
-	await postRequest(attribute, body);
-	if(obj != null){
+    let result = await postRequest(attribute, body);
+    console.log(result);
+    let status = result.target.status;
+	if(obj != null && status == 200){
 		let div = document.getElementById(x+":"+y);
 		let img = document.createElement("img");
 		const type = attribute.charAt(0).toUpperCase() + attribute.slice(1);
@@ -120,7 +122,7 @@ function putRequest(path, body) {
 		request.setRequestHeader("Content-Type", "application/json");
 		request.send(JSON.stringify(body));
 		request.onload = function(result) {
-			resolve(result.target.response);
+			resolve(result);
 		}
 	})
 }
@@ -134,7 +136,7 @@ function postRequest(path, body) {
 		request.setRequestHeader("Content-Type", "application/json");
 		request.send(JSON.stringify(body));
 		request.onload = function(result) {
-			resolve(result.target.response);
+			resolve(result);
 		}
 	})
 }
