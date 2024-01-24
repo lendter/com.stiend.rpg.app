@@ -99,6 +99,7 @@ async function addFieldAttribute(x, y, attribute, obj) {
 	}
 }
 
+
 async function removeFieldAttribute(x, y, attribute) {
 	let body = {
 		"x": x,
