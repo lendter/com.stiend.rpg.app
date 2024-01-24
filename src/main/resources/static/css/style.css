@@ -7,6 +7,20 @@
 	border: 0.5px solid black;
 }
 
+.highlight {
+	position: absolute;
+	width: 30px;
+	height: 30px;
+}
+
+.opacity-char {
+	opacity: 0.5;
+}
+
+.opacity-field {
+	opacity: 0.35;
+}
+
 .character{
 	width: 30px;
 	height: 30px;	
