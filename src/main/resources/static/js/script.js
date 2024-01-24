@@ -78,7 +78,6 @@ async function addFieldAttribute(x, y, attribute, obj) {
 			"x": x,
 			"y": y
 		}
-		document.getElementById(x+":"+y).children[0].classList.add(attribute);
 	}
     let result = await postRequest(attribute, body);
     console.log(result);
@@ -90,6 +89,10 @@ async function addFieldAttribute(x, y, attribute, obj) {
 		img.className = "character";
 		img.src = "/img/"+type+"-noBackground.png";
 		div.children[0].append(img);	
+	}else if(status == 200){
+		document.getElementById(x+":"+y).children[0].classList.add(attribute);
+	}else{
+		$('#exception').toast('show')
 	}
 }
 
