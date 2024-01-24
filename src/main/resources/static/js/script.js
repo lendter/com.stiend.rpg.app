@@ -79,20 +79,23 @@ async function addFieldAttribute(x, y, attribute, obj) {
 			"y": y
 		}
 	}
-    let result = await postRequest(attribute, body);
-    console.log(result);
-    let status = result.target.status;
-	if(obj != null && status == 200){
-		let div = document.getElementById(x+":"+y);
+	let result = await postRequest(attribute, body);
+	console.log(result);
+	let status = result.target.status;
+	if (obj != null && status == 200) {
+		let div = document.getElementById(x + ":" + y);
 		let img = document.createElement("img");
 		const type = attribute.charAt(0).toUpperCase() + attribute.slice(1);
 		img.className = "character";
-		img.src = "/img/"+type+"-noBackground.png";
-		div.children[0].append(img);	
-	}else if(status == 200){
-		document.getElementById(x+":"+y).children[0].classList.add(attribute);
-	}else{
-		$('#exception').toast('show')
+		img.src = "/img/" + type + "-noBackground.png";
+		div.children[0].append(img);
+	} else if (status == 200) {
+		document.getElementById(x + ":" + y).children[0].classList.add(attribute);
+	} else {
+		console.log("Toast");
+		const toastLiveExample = document.getElementById('exception');
+		const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+		toastBootstrap.show();
 	}
 }
 
