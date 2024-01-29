@@ -15,7 +15,7 @@ async function init() {
 	mapView.append(mapWrap);
 }
 
-function addSidebar(){
+function addSidebar() {
 	let div = document.createElement("div");
 	div.id = "sidebar";
 	div.className = "sidebar bg-dark-subtle";
@@ -23,7 +23,7 @@ function addSidebar(){
 	document.body.append(div);
 }
 
-function addMainContent(){
+function addMainContent() {
 	let div = document.createElement("div");
 	div.className = "d-flex";
 	div.id = "main-content";
@@ -31,7 +31,7 @@ function addMainContent(){
 	document.body.append(div);
 }
 
-function addToastException(){
+function addToastException() {
 	let div = document.createElement("div");
 	div.className = "toast-container position-fixed top-0 start-0 p-3";
 	$(div).load("/templates/toastContent");
@@ -236,7 +236,7 @@ function mockWizard() {
 	return { "name": "Dumbledore", "hp": 100, "intelligence": 30, "strength": 50, "constitution": 10, "dexterity": 15, "talent": null };
 }
 
-function sidebarOpen(){
+function sidebarOpen() {
 	document.getElementById('sidebar').style.width = "15%";
 	document.getElementById('main-content').style.marginRight = "15%";
 	var controller = document.getElementById('sidebar-control');
