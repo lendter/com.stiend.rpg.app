@@ -2,6 +2,9 @@ const BASE_URL = "http://localhost:8080/api/game/";
 
 async function init() {
 	document.addEventListener("contextmenu", e => e.preventDefault(), false);
+	addSidebar();
+	addMainContent();
+	addToastException();
 	let responseEntity = await getRequest("info");
 	responseEntity = JSON.parse(responseEntity);
 	console.log(responseEntity);
@@ -12,18 +15,43 @@ async function init() {
 	mapView.append(mapWrap);
 }
 
+function addSidebar(){
+	let div = document.createElement("div");
+	div.id = "sidebar";
+	div.className = "sidebar bg-dark-subtle";
+	$(div).load("/templates/sidebarContent.html");
+	document.body.append(div);
+}
+
+function addMainContent(){
+	let div = document.createElement("div");
+	div.className = "d-flex";
+	div.id = "main-content";
+	$(div).load("/templates/mainContent.html");
+	document.body.append(div);
+}
+
+function addToastException(){
+	let div = document.createElement("div");
+	div.className = "toast-container position-fixed top-0 start-0 p-3";
+	$(div).load("/templates/toastContent");
+	document.body.append(div);
+}
+
 function fillMap(fields) {
 	return new Promise(resolve => {
 		let mapWrap = document.createElement("div");
+		mapWrap.className = "map-container";
 		Object.keys(fields).forEach(function(y) {
 			let row = fields[y];
 			let rowDiv = document.createElement("div");
 			rowDiv.setAttribute("data-xPos", y);
-			rowDiv.className = "stack horizontal";
+			rowDiv.className = "stack horizontal map-row";
 			Object.keys(row).forEach(function(x) {
 				let field = row[x];
 				let fieldDiv = document.createElement("div");
 				fieldDiv.id = x + ":" + y;
+				fieldDiv.className = "map-field";
 				fieldDiv.addEventListener("drop", (event) => drop(event), false);
 				fieldDiv.addEventListener("dragover", (event) => allowDrop(event), false);
 				$(fieldDiv).load("/templates/field.html", function() {

@@ -16,58 +16,7 @@
 </head>
 
 <body onload="init()" class="p-1">
-	<div id="sidebar" class="sidebar bg-dark-subtle">
-		<div class="item">
-			<div class="field wall m-1" id="wall" draggable="true"
-				ondragstart="drag(event)"></div>
-		</div>
-		<div class="m-1 item">
-			<img id="monster" draggable="true" ondragstart="drag(event)"
-				class="character" src="/img/Monster-noBackground.png">
-		</div>
 
-		<div class="m-1 item">
-			<img id="knight" draggable="true" ondragstart="drag(event)"
-				class="character" src="/img/Knight-noBackground.png">
-		</div>
-
-		<div class="m-1 item">
-			<img id="mercenary" draggable="true" ondragstart="drag(event)"
-				class="character" src="/img/Mercenary-noBackground.png">
-		</div>
-
-		<div class="m-1 item">
-			<img id="wizard" draggable="true" ondragstart="drag(event)"
-				class="character" src="/img/Wizard-noBackground.png">
-		</div>
-
-		<div class="m-1 item">
-			<img id="sorcerer" draggable="true" ondragstart="drag(event)"
-				class="character" src="/img/Sorcerer-noBackground.png">
-		</div>
-	</div>
-	<div class="d-flex" id="main-content">
-		<div id="map-view"></div>
-		<div id="controls">
-			<button id="sidebar-control" onclick="sidebarOpen()"
-				class="open-btn bg-dark-subtle text-emphasis-dark"><</button>
-			<button id="createMapButton" onclick="createMap()">
-				<label>Create New Map</label>
-			</button>
-		</div>
-	</div>
-
-	<div class="toast-container position-fixed top-0 start-0 p-3">
-		<div id="exception" class="toast" role="alert" aria-live="assertive"
-			aria-atomic="true">
-			<div class="toast-header">
-				<strong class="me-auto">Illegal Action</strong> <small>Now</small>
-				<button type="button" class="btn-close" data-bs-dismiss="toast"
-					aria-label="Close"></button>
-			</div>
-			<div class="toast-body">Are you stupid mate?</div>
-		</div>
-	</div>
 </body>
 
 </html>

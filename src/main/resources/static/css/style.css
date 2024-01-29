@@ -1,10 +1,50 @@
+body {
+	width: 100vw;
+	height: 100vh;
+}
+
+#main-content {
+	width: 100%;
+	height: 100%;
+}
+
+.map-row {
+	aspect-ratio: 20/1;
+	max-height: 5%;
+}
+
+.map-field {
+	width: 5%;
+	height: 100%;
+}
+
+.map-container {
+	width: 100%;
+	height: 100%;
+	padding: 20px;
+}
+
 .field {
-	width: 30px;
-	height: 30px;
+	aspect-ratio: 1;
+	width: 100%;
+	height: 100%;
+	min-width: 30px;
+	min-height: 30px;
 	background-image: url("/img/wood-long-boards-floor.png");
-	background-size: contain;
+	background-size: cover;
 	color: white;
 	border: 0.5px solid black;
+}
+
+.sidebar .wall{
+	width: 30px;
+}
+
+.map-view {
+	margin-left: 10%;
+	width: 80%;
+	height: 100%;
+	display: flex;
 }
 
 .highlight {
@@ -21,41 +61,42 @@
 	opacity: 0.35;
 }
 
-.character{
-	width: 30px;
-	height: 30px;	
+.character {
+	width: 100%;
+	height: 100%;
+}
+
+.sidebar .character{
+	width: 40px;
+	height: 40px;
 }
 
 .wall {
 	background-image: url("/img/wall.jpg");
 }
 
-.knight{
-	background-image: url("/img/knight.jpg");	
+.knight {
+	background-image: url("/img/knight.jpg");
 }
 
-.mercenary{
-	background-image: url("/img/mercenary.jpg");	
+.mercenary {
+	background-image: url("/img/mercenary.jpg");
 }
 
-.wizard{
-	background-image: url("/img/wizard.jpg");	
+.wizard {
+	background-image: url("/img/wizard.jpg");
 }
 
-.sorcerer{
-	background-image: url("/img/sorcerer.jpg");	
+.sorcerer {
+	background-image: url("/img/sorcerer.jpg");
 }
 
-.m-1{
+.m-1 {
 	margin: 1rem;
 }
 
-.d-flex{
+.d-flex {
 	display: flex;
-}
-
-#map-view{
-	width: 80%;
 }
 
 .stack {
@@ -68,7 +109,7 @@
 }
 
 .vertical {
-	align-items: center;	
+	align-items: center;
 }
 
 .open-btn {
@@ -89,12 +130,12 @@
 	top: 0;
 	right: 0;
 	overflow-y: hidden;
-	overflow-x:hidden;
+	overflow-x: hidden;
 	padding-top: 3em;
 	transition: 0.5s;
 }
 
-.sidebar .item{
+.sidebar .item {
 	padding: 5% 5% 5% 15%;
 	transition: 0.3s;
 }
@@ -113,8 +154,22 @@
 }
 
 @media screen and (max-height: 450px) {
-	.sidebar {padding-top: 15px;}
-	.field {width: 15px; height: 15px;}
-	.highlight {width: 15px; height: 15px;}
-	.character {width: 15px; height: 15px;}
+	.sidebar {
+		padding-top: 15px;
+	}
+
+	.field {
+		width: 15px;
+		height: 15px;
+	}
+
+	.highlight {
+		width: 15px;
+		height: 15px;
+	}
+
+	.character {
+		width: 15px;
+		height: 15px;
+	}
 }
