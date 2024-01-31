@@ -9,16 +9,16 @@ async function init() {
 	let state = responseEntity["state"];
 	if (state != null) {
 		if (state == "GAME_CREATION") {
-			addSidebar();
-			addMainContent();
-			addToastException();
+			await addSidebar();
+			await addMainContent();
+			await addToastException();
 		} else if (state == "PLAY_STATE") {
-			addGameContent();
+			await addGameContent();
 		}
 	} else {
-		addSidebar();
-		addMainContent();
-		addToastException();
+		await addSidebar();
+		await addMainContent();
+		await addToastException();
 	}
 	let mapView = document.getElementById("map-view");
 	if (map != null) {
@@ -29,34 +29,52 @@ async function init() {
 }
 
 function addSidebar() {
-	let div = document.createElement("div");
-	div.id = "sidebar";
-	div.className = "sidebar bg-dark-subtle";
-	$(div).load("/templates/sidebarContent.html");
-	document.body.append(div);
+	return new Promise(resolve => {
+		let div = document.createElement("div");
+		div.id = "sidebar";
+		div.className = "sidebar bg-dark-subtle";
+		$(div).load("/templates/sidebarContent.html", function() {
+			document.body.append(div);
+			resolve();
+		});
+	})
+
 }
 
 function addMainContent() {
-	let div = document.createElement("div");
-	div.className = "d-flex";
-	div.id = "main-content";
-	$(div).load("/templates/mainContent.html");
-	document.body.append(div);
+	return new Promise(resolve => {
+		let div = document.createElement("div");
+		div.className = "d-flex";
+		div.id = "main-content";
+		$(div).load("/templates/mainContent.html", function() {
+			document.body.append(div);
+			resolve();
+		});
+	});
+
 }
 
 function addGameContent() {
-	let div = document.createElement("div");
-	div.className = "d-flex";
-	div.id = "main-content";
-	$(div).load("/templates/gameContent.html");
-	document.body.append(div);
+	return new Promise(resolve => {
+		let div = document.createElement("div");
+		div.className = "d-flex";
+		div.id = "main-content";
+		$(div).load("/templates/gameContent.html", function() {
+			document.body.append(div);
+			resolve();
+		});
+	});
 }
 
 function addToastException() {
-	let div = document.createElement("div");
-	div.className = "toast-container position-fixed top-0 start-0 p-3";
-	$(div).load("/templates/toastContent.html");
-	document.body.append(div);
+	return new Promise(resolve => {
+		let div = document.createElement("div");
+		div.className = "toast-container position-fixed top-0 start-0 p-3";
+		$(div).load("/templates/toastContent.html", function(){
+			document.body.append(div);
+			resolve();		
+		});
+	});
 }
 
 function fillMap(fields) {
@@ -276,5 +294,5 @@ function sidebarClose() {
 }
 
 function startGame() {
-	postRequest("start", null);
+	postRequest("start");
 }
