@@ -2,17 +2,30 @@ const BASE_URL = "http://localhost:8080/api/game/";
 
 async function init() {
 	document.addEventListener("contextmenu", e => e.preventDefault(), false);
-	addSidebar();
-	addMainContent();
-	addToastException();
 	let responseEntity = await getRequest("info");
 	responseEntity = JSON.parse(responseEntity);
 	console.log(responseEntity);
 	let map = responseEntity["map"];
+	let state = responseEntity["state"];
+	if (state != null) {
+		if (state == "GAME_CREATION") {
+			addSidebar();
+			addMainContent();
+			addToastException();
+		} else if (state == "PLAY_STATE") {
+			addGameContent();
+		}
+	} else {
+		addSidebar();
+		addMainContent();
+		addToastException();
+	}
 	let mapView = document.getElementById("map-view");
-	let fields = map["fields"];
-	let mapWrap = await fillMap(fields);
-	mapView.append(mapWrap);
+	if (map != null) {
+		let fields = map["fields"];
+		let mapWrap = await fillMap(fields);
+		mapView.append(mapWrap);
+	}
 }
 
 function addSidebar() {
@@ -31,10 +44,18 @@ function addMainContent() {
 	document.body.append(div);
 }
 
+function addGameContent() {
+	let div = document.createElement("div");
+	div.className = "d-flex";
+	div.id = "main-content";
+	$(div).load("/templates/gameContent.html");
+	document.body.append(div);
+}
+
 function addToastException() {
 	let div = document.createElement("div");
 	div.className = "toast-container position-fixed top-0 start-0 p-3";
-	$(div).load("/templates/toastContent");
+	$(div).load("/templates/toastContent.html");
 	document.body.append(div);
 }
 
@@ -254,6 +275,6 @@ function sidebarClose() {
 	controller.removeAttribute("style");
 }
 
-function startGame(){
-	
+function startGame() {
+	postRequest("start", null);
 }

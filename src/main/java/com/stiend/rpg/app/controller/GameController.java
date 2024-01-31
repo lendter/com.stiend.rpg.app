@@ -39,6 +39,12 @@ public class GameController {
 	public RPGResponseEntity getInfo() {
 		return this.responseEntity;
 	}
+	
+	@PostMapping("/start")
+	public RPGResponseEntity startGame(){
+		responseEntity.setState(GameState.PLAY_STATE);
+		return responseEntity;
+	}
 
 	@PostMapping("/wall")
 	public ResponseEntity<HttpStatus> postWall(@RequestBody Position position) {
