@@ -238,7 +238,7 @@ function mockWizard() {
 
 function sidebarOpen() {
 	document.getElementById('sidebar').style.width = "15%";
-	document.getElementById('main-content').style.marginRight = "15%";
+	document.getElementById('main-content').style.paddingRight = "15%";
 	var controller = document.getElementById('sidebar-control');
 	controller.innerHTML = ">";
 	controller.setAttribute("onclick", "sidebarClose()");
