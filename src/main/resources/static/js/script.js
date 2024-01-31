@@ -253,3 +253,7 @@ function sidebarClose() {
 	controller.setAttribute("onclick", "sidebarOpen()");
 	controller.removeAttribute("style");
 }
+
+function startGame(){
+	
+}

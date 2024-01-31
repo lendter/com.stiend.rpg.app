@@ -148,6 +148,10 @@ body {
 	font-size: 20px;
 }
 
+.btn-costum {
+	margin: 5%;
+}
+
 #main-content {
 	transition: margin-right .5s;
 	padding: 20px;
