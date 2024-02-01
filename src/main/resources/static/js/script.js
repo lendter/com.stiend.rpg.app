@@ -9,16 +9,16 @@ async function init() {
 	let state = responseEntity["state"];
 	if (state != null) {
 		if (state == "GAME_CREATION") {
-			await addSidebar();
-			await addMainContent();
-			await addToastException();
+			await addContent("sidebar", "sidebar bg-dark-subtle", "sidebarContent");
+			await addContent("main-content", "d-flex", "mainContent");
+			await addContent("toast-container", "toast-container position-fixed top-0 start-0 p-3", "toastContent");
 		} else if (state == "PLAY_STATE") {
-			await addGameContent();
+			await addContent("main-content", "d-flex", "gameContent");
 		}
 	} else {
-		await addSidebar();
-		await addMainContent();
-		await addToastException();
+		await addContent("sidebar", "sidebar bg-dark-subtle", "sidebarContent");
+		await addContent("main-content", "d-flex", "mainContent");
+		await addContent("toast-container", "toast-container position-fixed top-0 start-0 p-3", "toastContent");
 	}
 	let mapView = document.getElementById("map-view");
 	if (map != null) {
@@ -28,51 +28,14 @@ async function init() {
 	}
 }
 
-function addSidebar() {
+function addContent(id, classes, template) {
 	return new Promise(resolve => {
 		let div = document.createElement("div");
-		div.id = "sidebar";
-		div.className = "sidebar bg-dark-subtle";
-		$(div).load("/templates/sidebarContent.html", function() {
+		div.id = id;
+		div.className = classes;
+		$(div).load("/templates/" + template + ".html", function() {
 			document.body.append(div);
 			resolve();
-		});
-	})
-
-}
-
-function addMainContent() {
-	return new Promise(resolve => {
-		let div = document.createElement("div");
-		div.className = "d-flex";
-		div.id = "main-content";
-		$(div).load("/templates/mainContent.html", function() {
-			document.body.append(div);
-			resolve();
-		});
-	});
-
-}
-
-function addGameContent() {
-	return new Promise(resolve => {
-		let div = document.createElement("div");
-		div.className = "d-flex";
-		div.id = "main-content";
-		$(div).load("/templates/gameContent.html", function() {
-			document.body.append(div);
-			resolve();
-		});
-	});
-}
-
-function addToastException() {
-	return new Promise(resolve => {
-		let div = document.createElement("div");
-		div.className = "toast-container position-fixed top-0 start-0 p-3";
-		$(div).load("/templates/toastContent.html", function(){
-			document.body.append(div);
-			resolve();		
 		});
 	});
 }
