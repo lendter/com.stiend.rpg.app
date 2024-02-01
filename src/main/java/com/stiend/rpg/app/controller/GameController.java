@@ -1,5 +1,8 @@
 package com.stiend.rpg.app.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +19,7 @@ import com.stiend.rpg.app.models.MonsterConfiguration;
 import com.stiend.rpg.app.models.RPGResponseEntity;
 import com.stiend.rpg.app.models.SorcererConfiguration;
 import com.stiend.rpg.app.models.WizardConfiguration;
+import com.stiend.app.utils.DexterityComparator;
 
 import character.*;
 import physics.Field;
@@ -33,6 +37,23 @@ public class GameController {
 		Map map = new Map(configuration.getSize());
 		this.responseEntity.setMap(map);
 		this.responseEntity.setState(GameState.GAME_CREATION);
+	}
+	
+	@GetMapping("/placedCharacters")
+	public ResponseEntity<List<PlayerCharacter>> getCharacters() {
+		List<PlayerCharacter> characters = new ArrayList<PlayerCharacter>();
+		Field field;
+		
+		int mapSize = this.responseEntity.getMap().getSize();
+		for(int i=0; i<mapSize; i++) {
+			for(int j=0; j<mapSize; j++) {
+				field = this.responseEntity.getMap().getField(i, j);
+				if(field.getCharacter() != null) {
+					characters.add(field.getCharacter());
+				}
+			}
+		}
+		return ResponseEntity.ok(characters);
 	}
 
 	@GetMapping("/info")
