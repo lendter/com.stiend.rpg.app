@@ -1,6 +1,5 @@
 package com.stiend.rpg.app.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -11,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.stiend.app.utils.Utilities;
+import com.stiend.app.utils.DexterityComparator;
 import com.stiend.rpg.app.models.GameState;
 import com.stiend.rpg.app.models.KnightConfiguration;
 import com.stiend.rpg.app.models.MapConfiguration;
@@ -19,10 +20,8 @@ import com.stiend.rpg.app.models.MonsterConfiguration;
 import com.stiend.rpg.app.models.RPGResponseEntity;
 import com.stiend.rpg.app.models.SorcererConfiguration;
 import com.stiend.rpg.app.models.WizardConfiguration;
-import com.stiend.app.utils.DexterityComparator;
 
 import character.*;
-import physics.Field;
 import physics.Map;
 import physics.Position;
 
@@ -40,19 +39,14 @@ public class GameController {
 	}
 	
 	@GetMapping("/placedCharacters")
-	public ResponseEntity<List<PlayerCharacter>> getCharacters() {
-		List<PlayerCharacter> characters = new ArrayList<PlayerCharacter>();
-		Field field;
-		
-		int mapSize = this.responseEntity.getMap().getSize();
-		for(int i=0; i<mapSize; i++) {
-			for(int j=0; j<mapSize; j++) {
-				field = this.responseEntity.getMap().getField(i, j);
-				if(field.getCharacter() != null) {
-					characters.add(field.getCharacter());
-				}
-			}
-		}
+	public ResponseEntity<List<PlayerCharacter>> getCharacters() {		
+		return ResponseEntity.ok(Utilities.getPlacedCharacters(this.responseEntity.getMap()));
+	}
+	
+	@GetMapping("/round/getInitiative")
+	public ResponseEntity<List<PlayerCharacter>> getInitiative() {
+		List<PlayerCharacter> characters = Utilities.getPlacedCharacters(this.responseEntity.getMap());
+		characters.sort(new DexterityComparator());
 		return ResponseEntity.ok(characters);
 	}
 
