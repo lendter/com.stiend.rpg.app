@@ -293,6 +293,7 @@ function sidebarClose() {
 	controller.removeAttribute("style");
 }
 
-function startGame() {
-	postRequest("start");
+async function startGame() {
+	await postRequest("start");
+	window.location.reload();
 }
