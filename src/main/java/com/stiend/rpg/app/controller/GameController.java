@@ -37,26 +37,31 @@ public class GameController {
 		this.responseEntity.setMap(map);
 		this.responseEntity.setState(GameState.GAME_CREATION);
 	}
-	
+
 	@GetMapping("/placedCharacters")
-	public ResponseEntity<List<PlayerCharacter>> getCharacters() {		
-		return ResponseEntity.ok(Utilities.getPlacedCharacters(this.responseEntity.getMap()));
+	public ResponseEntity<List<PlayerCharacter>> getCharacters() {
+		if (this.responseEntity.getMap() != null)
+			return ResponseEntity.ok(Utilities.getPlacedCharacters(this.responseEntity.getMap()));
+		return ResponseEntity.ok(null);
 	}
-	
-	@GetMapping("/round/getInitiative")
+
+	@GetMapping("/round/initiative")
 	public ResponseEntity<List<PlayerCharacter>> getInitiative() {
-		List<PlayerCharacter> characters = Utilities.getPlacedCharacters(this.responseEntity.getMap());
-		characters.sort(new DexterityComparator());
-		return ResponseEntity.ok(characters);
+		if (this.responseEntity.getMap() != null) {
+			List<PlayerCharacter> characters = Utilities.getPlacedCharacters(this.responseEntity.getMap());
+			characters.sort(new DexterityComparator());
+			return ResponseEntity.ok(characters);
+		}
+		return ResponseEntity.ok(null);
 	}
 
 	@GetMapping("/info")
 	public RPGResponseEntity getInfo() {
 		return this.responseEntity;
 	}
-	
+
 	@PostMapping("/start")
-	public RPGResponseEntity startGame(){
+	public RPGResponseEntity startGame() {
 		responseEntity.setState(GameState.PLAY_STATE);
 		return responseEntity;
 	}
@@ -66,8 +71,8 @@ public class GameController {
 		try {
 			System.out.println(position.getY() + "  " + position.getX());
 			boolean success = this.responseEntity.getMap().getField(position).setWall(true);
-			return isSuccess(success);	
-		}catch(Exception e) {
+			return isSuccess(success);
+		} catch (Exception e) {
 			return new ResponseEntity<HttpStatus>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -75,10 +80,10 @@ public class GameController {
 	@PostMapping("/playable")
 	public ResponseEntity<HttpStatus> postPlayable(@RequestBody Position position) {
 		try {
-			System.out.println(position.getY() + "  "+ position.getX());
+			System.out.println(position.getY() + "  " + position.getX());
 			boolean success = this.responseEntity.getMap().getField(position).setWall(false);
 			return isSuccess(success);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			return new ResponseEntity<HttpStatus>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -107,6 +112,7 @@ public class GameController {
 	public ResponseEntity<HttpStatus> postMonster(@RequestBody MonsterConfiguration config) {
 		try {
 			System.out.println(config.getMonster().getName());
+			config.getMonster().setPosition(config.getPosition());
 			boolean success = this.responseEntity.getMap().getField(config.getPosition())
 					.setMonster(config.getMonster());
 			return isSuccess(success);
@@ -117,6 +123,7 @@ public class GameController {
 
 	public ResponseEntity<HttpStatus> postCharacter(Position position, PlayerCharacter character) {
 		System.out.println(character.getName());
+		character.setPosition(position);
 		try {
 			boolean success = this.responseEntity.getMap().getField(position).setCharacter(character);
 			return isSuccess(success);
@@ -124,8 +131,8 @@ public class GameController {
 			return new ResponseEntity<HttpStatus>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
-	
-	private ResponseEntity<HttpStatus> isSuccess(boolean success){
+
+	private ResponseEntity<HttpStatus> isSuccess(boolean success) {
 		if (success) {
 			return new ResponseEntity<HttpStatus>(HttpStatus.OK);
 		} else {

@@ -20,6 +20,8 @@ public class Utilities {
 				field = map.getField(i, j);
 				if(field.getCharacter() != null) {
 					characters.add(field.getCharacter());
+				} else if(field.getMonster() != null) {
+					characters.add(field.getMonster());
 				}
 			}
 		}

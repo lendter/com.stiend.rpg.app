@@ -14,6 +14,9 @@ async function init() {
 			await addContent("toast-container", "toast-container position-fixed top-0 start-0 p-3", "toastContent");
 		} else if (state == "PLAY_STATE") {
 			await addContent("main-content", "d-flex", "gameContent");
+			let characters = await getRequest("round/initiative");
+			characters = JSON.parse(characters);
+			await fillInitiative(characters);
 		}
 	} else {
 		await addContent("sidebar", "sidebar bg-dark-subtle", "sidebarContent");
@@ -37,6 +40,22 @@ function addContent(id, classes, template) {
 			document.body.append(div);
 			resolve();
 		});
+	});
+}
+
+function fillInitiative(characters) {
+	return new Promise(resolve => {
+		let list = document.getElementById("initiative-list");
+		Object.keys(characters).forEach(function(i) {
+			let img = document.createElement("img");
+			let character = characters[i];
+			let type = character["type"].split(".")[1];
+			img.src = "/img/" + type + "-noBackground.png";
+			img.className = "character-list-item";
+			img.setAttribute("id", "character-" + character["position"]["x"] + ":" + character["position"]["y"])
+			list.appendChild(img);
+		});
+		resolve();
 	});
 }
 
@@ -66,7 +85,6 @@ function fillMap(fields) {
 					if (field["character"] != null) {
 						let character = field["character"];
 						let type = character["type"].split(".")[1];
-						console.log(type);
 						let img = document.createElement("img");
 						img.src = "/img/" + type + "-noBackground.png";
 						img.className = "character";

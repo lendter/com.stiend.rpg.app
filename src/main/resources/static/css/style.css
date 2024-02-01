@@ -66,6 +66,11 @@ body {
 	height: 100%;
 }
 
+.character-list-item {
+	width: 25%;
+	height: 25%;
+}
+
 .sidebar .character{
 	width: 40px;
 	height: 40px;
