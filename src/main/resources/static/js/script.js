@@ -137,7 +137,7 @@ async function removeFieldAttribute(x, y, attribute) {
 		"x": x,
 		"y": y
 	}
-	await postRequest(attribute, body);
+	await postRequest("remove/" + attribute, body);
 	document.getElementById(x + ":" + y).children[0].classList.remove(attribute);
 }
 

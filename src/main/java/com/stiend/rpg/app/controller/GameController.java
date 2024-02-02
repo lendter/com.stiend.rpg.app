@@ -17,6 +17,7 @@ import com.stiend.rpg.app.models.KnightConfiguration;
 import com.stiend.rpg.app.models.MapConfiguration;
 import com.stiend.rpg.app.models.MercenaryConfiguration;
 import com.stiend.rpg.app.models.MonsterConfiguration;
+import com.stiend.rpg.app.models.Move;
 import com.stiend.rpg.app.models.RPGResponseEntity;
 import com.stiend.rpg.app.models.SorcererConfiguration;
 import com.stiend.rpg.app.models.WizardConfiguration;
@@ -62,6 +63,12 @@ public class GameController {
 		return this.responseEntity;
 	}
 	
+	@GetMapping("/placedCharacters/getMoves")
+	public ResponseEntity<List<Move>> getAvailableMoves(@RequestBody Position position) {
+		List<Move> moves = Utilities.getAvailableMoves(this.responseEntity.getMap(), this.responseEntity.getMap().getField(position).getCharacter());
+		return ResponseEntity.ok(moves);
+	}
+	
 	@PostMapping("/map")
 	public void createMap(@RequestBody MapConfiguration configuration) {
 		System.out.println(configuration.getSize());
@@ -87,7 +94,7 @@ public class GameController {
 		}
 	}
 
-	@PostMapping("/playable")
+	@PostMapping("/remove/wall")
 	public ResponseEntity<HttpStatus> postPlayable(@RequestBody Position position) {
 		try {
 			System.out.println(position.getY() + "  " + position.getX());
