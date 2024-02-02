@@ -30,19 +30,21 @@ import physics.Position;
 public class GameController {
 	private RPGResponseEntity responseEntity = new RPGResponseEntity();
 
-	@PostMapping("/map")
-	public void createMap(@RequestBody MapConfiguration configuration) {
-		System.out.println(configuration.getSize());
-		Map map = new Map(configuration.getSize());
-		this.responseEntity.setMap(map);
-		this.responseEntity.setState(GameState.GAME_CREATION);
-	}
-
 	@GetMapping("/placedCharacters")
 	public ResponseEntity<List<PlayerCharacter>> getCharacters() {
 		if (this.responseEntity.getMap() != null)
 			return ResponseEntity.ok(Utilities.getPlacedCharacters(this.responseEntity.getMap()));
 		return ResponseEntity.ok(null);
+	}
+
+	@GetMapping("/placedCharacters/hasPlayer")
+	public ResponseEntity<Boolean> hasPlayerCharacter() {
+			return ResponseEntity.ok(Utilities.hasPlayerCharacter(this.responseEntity.getMap()));
+	}
+
+	@GetMapping("/placedCharacters/hasMonster")
+	public ResponseEntity<Boolean> hasMonster() {
+			return ResponseEntity.ok(Utilities.hasMonster(this.responseEntity.getMap()));
 	}
 
 	@GetMapping("/round/initiative")
@@ -59,6 +61,14 @@ public class GameController {
 	public RPGResponseEntity getInfo() {
 		return this.responseEntity;
 	}
+	
+	@PostMapping("/map")
+	public void createMap(@RequestBody MapConfiguration configuration) {
+		System.out.println(configuration.getSize());
+		Map map = new Map(configuration.getSize());
+		this.responseEntity.setMap(map);
+		this.responseEntity.setState(GameState.GAME_CREATION);
+	}
 
 	@PostMapping("/start")
 	public RPGResponseEntity startGame() {
@@ -71,7 +81,7 @@ public class GameController {
 		try {
 			System.out.println(position.getY() + "  " + position.getX());
 			boolean success = this.responseEntity.getMap().getField(position).setWall(true);
-			return isSuccess(success);
+			return Utilities.isSuccess(success);
 		} catch (Exception e) {
 			return new ResponseEntity<HttpStatus>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -82,7 +92,7 @@ public class GameController {
 		try {
 			System.out.println(position.getY() + "  " + position.getX());
 			boolean success = this.responseEntity.getMap().getField(position).setWall(false);
-			return isSuccess(success);
+			return Utilities.isSuccess(success);
 		} catch (Exception e) {
 			return new ResponseEntity<HttpStatus>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -90,22 +100,22 @@ public class GameController {
 
 	@PostMapping("/knight")
 	public ResponseEntity<HttpStatus> postKnight(@RequestBody KnightConfiguration config) {
-		return postCharacter(config.getPosition(), config.getKnight());
+		return Utilities.postCharacter(this.responseEntity.getMap(), config.getPosition(), config.getKnight());
 	}
 
 	@PostMapping("/mercenary")
 	public ResponseEntity<HttpStatus> postMercenary(@RequestBody MercenaryConfiguration config) {
-		return postCharacter(config.getPosition(), config.getMercenary());
+		return Utilities.postCharacter(this.responseEntity.getMap(), config.getPosition(), config.getMercenary());
 	}
 
 	@PostMapping("/sorcerer")
 	public ResponseEntity<HttpStatus> postSorcerer(@RequestBody SorcererConfiguration config) {
-		return postCharacter(config.getPosition(), config.getSorcerer());
+		return Utilities.postCharacter(this.responseEntity.getMap(), config.getPosition(), config.getSorcerer());
 	}
 
 	@PostMapping("/wizard")
 	public ResponseEntity<HttpStatus> postWizard(@RequestBody WizardConfiguration config) {
-		return postCharacter(config.getPosition(), config.getWizard());
+		return Utilities.postCharacter(this.responseEntity.getMap(), config.getPosition(), config.getWizard());
 	}
 
 	@PostMapping("/monster")
@@ -115,28 +125,9 @@ public class GameController {
 			config.getMonster().setPosition(config.getPosition());
 			boolean success = this.responseEntity.getMap().getField(config.getPosition())
 					.setMonster(config.getMonster());
-			return isSuccess(success);
+			return Utilities.isSuccess(success);
 		} catch (Exception e) {
 			return new ResponseEntity<HttpStatus>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	public ResponseEntity<HttpStatus> postCharacter(Position position, PlayerCharacter character) {
-		System.out.println(character.getName());
-		character.setPosition(position);
-		try {
-			boolean success = this.responseEntity.getMap().getField(position).setCharacter(character);
-			return isSuccess(success);
-		} catch (Exception e) {
-			return new ResponseEntity<HttpStatus>(HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-	}
-
-	private ResponseEntity<HttpStatus> isSuccess(boolean success) {
-		if (success) {
-			return new ResponseEntity<HttpStatus>(HttpStatus.OK);
-		} else {
-			return new ResponseEntity<HttpStatus>(HttpStatus.CONFLICT);
 		}
 	}
 }

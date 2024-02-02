@@ -43,22 +43,6 @@ function addContent(id, classes, template) {
 	});
 }
 
-function fillInitiative(characters) {
-	return new Promise(resolve => {
-		let list = document.getElementById("initiative-list");
-		Object.keys(characters).forEach(function(i) {
-			let img = document.createElement("img");
-			let character = characters[i];
-			let type = character["type"].split(".")[1];
-			img.src = "/img/" + type + "-noBackground.png";
-			img.className = "character-list-item";
-			img.setAttribute("id", "character-" + character["position"]["x"] + ":" + character["position"]["y"])
-			list.appendChild(img);
-		});
-		resolve();
-	});
-}
-
 function fillMap(fields) {
 	return new Promise(resolve => {
 		let mapWrap = document.createElement("div");
@@ -274,7 +258,48 @@ function sidebarClose() {
 	controller.removeAttribute("style");
 }
 
+ function checkPlayable(map, hasMonster, hasPlayer) {
+	if (map != null && hasPlayer && hasMonster) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+function fillInitiative(characters) {
+	return new Promise(resolve => {
+		let list = document.getElementById("initiative-list");
+		Object.keys(characters).forEach(function(i) {
+			let li = document.createElement("li");
+			li.className = "list-group-item";
+			let img = document.createElement("img");
+			let character = characters[i];
+			let type = character["type"].split(".")[1];
+			img.src = "/img/" + type + "-noBackground.png";
+			img.className = "character-list-item";
+			img.setAttribute("id", "character-" + character["position"]["x"] + ":" + character["position"]["y"])
+			li.append(img);
+			list.appendChild(li);
+		});
+		resolve();
+	});
+}
+
 async function startGame() {
-	await postRequest("start");
-	window.location.reload();
+	let response = await getRequest("info");
+	response = JSON.parse(response);
+
+	var hasMonster = await getRequest("placedCharacters/hasMonster");
+	var hasPlayer = await getRequest("placedCharacters/hasPlayer");
+	hasPlayer = JSON.parse(hasPlayer);
+	hasMonster = JSON.parse(hasMonster);
+
+	if (checkPlayable(response["map"], hasMonster, hasPlayer)) {
+		await postRequest("start");
+		window.location.reload();
+	} else {
+		const toastLiveExample = document.getElementById('exception');
+		const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
+		toastBootstrap.show();
+	}
 }
