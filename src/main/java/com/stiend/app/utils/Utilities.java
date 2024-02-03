@@ -92,7 +92,7 @@ public class Utilities {
 
 		int x = character.getPosition().getX();
 		int y = character.getPosition().getY();
-		int movement = character.getDexterity();
+		int movement = 2;
 
 		moves = getAvailableNeighbours(map, x, y, movement, moves);
 
@@ -106,22 +106,21 @@ public class Utilities {
 			for (int i = -1; i <= 1; i += 2) {
 				int newX = x + i;
 				int newY = y + i;
-				if (newX >= 0 && !map.getField(newX, y).isWall()) {
+				if (newX >= 0 && newX < map.getSize() && !map.getField(newX, y).isWall()) {
 					Move move = findMove(moves, newX, y);
 					if (move != null && movement - 1 > move.getMovement()) {
 						moves.remove(move);
 						moves = getAvailableNeighbours(map, newX, y, movement - 1, moves);
-					}else if(move == null) {
+					} else if (move == null) {
 						moves = getAvailableNeighbours(map, newX, y, movement - 1, moves);
 					}
-
 				}
-				if (newY >= 0 && !map.getField(x, newY).isWall()) {
+				if (newY >= 0 && newY < map.getSize() && !map.getField(x, newY).isWall()) {
 					Move move = findMove(moves, x, newY);
 					if (move != null && movement - 1 > move.getMovement()) {
-						moves.remove(move);						
+						moves.remove(move);
 						moves = getAvailableNeighbours(map, x, newY, movement - 1, moves);
-					} else if(move == null) {
+					} else if (move == null) {
 						moves = getAvailableNeighbours(map, x, newY, movement - 1, moves);
 					}
 				}

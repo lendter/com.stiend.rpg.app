@@ -63,7 +63,7 @@ public class GameController {
 		return this.responseEntity;
 	}
 	
-	@GetMapping("/placedCharacters/getMoves")
+	@PostMapping("/placedCharacters/getMoves")
 	public ResponseEntity<List<Move>> getAvailableMoves(@RequestBody Position position) {
 		List<Move> moves = Utilities.getAvailableMoves(this.responseEntity.getMap(), this.responseEntity.getMap().getField(position).getCharacter());
 		return ResponseEntity.ok(moves);
