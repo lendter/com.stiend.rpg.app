@@ -27,10 +27,10 @@ async function init() {
 		await addContent("main-content", "d-flex", "mainContent");
 		await addContent("toast-container", "toast-container position-fixed top-0 start-0 p-3", "toastContent");
 	}
-	
+
 }
 
-async function createMapContent(map){
+async function createMapContent(map) {
 	let mapView = document.getElementById("map-view");
 	if (map != null) {
 		let fields = map["fields"];
@@ -266,7 +266,7 @@ function sidebarClose() {
 	controller.removeAttribute("style");
 }
 
- function checkPlayable(map, hasMonster, hasPlayer) {
+function checkPlayable(map, hasMonster, hasPlayer) {
 	if (map != null && hasPlayer && hasMonster) {
 		return true;
 	} else {
@@ -312,11 +312,11 @@ async function startGame() {
 	}
 }
 
-async function getAvailableMoves(position){
+async function getAvailableMoves(position) {
 	let result = await postRequest("placedCharacters/getMoves", position);
 	let moveArr = JSON.parse(result.target.response);
 	console.log(moveArr);
-	for(moveIndex in moveArr){
+	for (moveIndex in moveArr) {
 		let move = moveArr[moveIndex];
 		console.log(move);
 		let position = move.position;
@@ -324,13 +324,16 @@ async function getAvailableMoves(position){
 	}
 }
 
-function highlightPosition(position){
-	console.log(position.x +":" + position.y);
-	let field = document.getElementById(position.x +":" + position.y);
+function highlightPosition(position) {
+	console.log(position.x + ":" + position.y);
+	let field = document.getElementById(position.x + ":" + position.y);
 	console.log(field);
 	let fieldDiv = field.children[0];
+
 	let highlighter = document.createElement("div");
 	highlighter.className = "highlight";
+	if (fieldDiv.children.length > 0) {
+		highlighter.className = "highlight-char";
+	}
 	fieldDiv.append(highlighter);
-	
 }
