@@ -12,17 +12,25 @@ async function init() {
 			await addContent("sidebar", "sidebar bg-dark-subtle", "sidebarContent");
 			await addContent("main-content", "d-flex", "mainContent");
 			await addContent("toast-container", "toast-container position-fixed top-0 start-0 p-3", "toastContent");
+			createMapContent(map);
 		} else if (state == "PLAY_STATE") {
 			await addContent("main-content", "d-flex", "gameContent");
+			createMapContent(map);
 			let characters = await getRequest("round/initiative");
 			characters = JSON.parse(characters);
 			await fillInitiative(characters);
+			console.log(characters[0]);
+			getAvailableMoves(characters[0].position);
 		}
 	} else {
 		await addContent("sidebar", "sidebar bg-dark-subtle", "sidebarContent");
 		await addContent("main-content", "d-flex", "mainContent");
 		await addContent("toast-container", "toast-container position-fixed top-0 start-0 p-3", "toastContent");
 	}
+	
+}
+
+async function createMapContent(map){
 	let mapView = document.getElementById("map-view");
 	if (map != null) {
 		let fields = map["fields"];
@@ -302,4 +310,27 @@ async function startGame() {
 		const toastBootstrap = bootstrap.Toast.getOrCreateInstance(toastLiveExample);
 		toastBootstrap.show();
 	}
+}
+
+async function getAvailableMoves(position){
+	let result = await postRequest("placedCharacters/getMoves", position);
+	let moveArr = JSON.parse(result.target.response);
+	console.log(moveArr);
+	for(moveIndex in moveArr){
+		let move = moveArr[moveIndex];
+		console.log(move);
+		let position = move.position;
+		highlightPosition(position);
+	}
+}
+
+function highlightPosition(position){
+	console.log(position.x +":" + position.y);
+	let field = document.getElementById(position.x +":" + position.y);
+	console.log(field);
+	let fieldDiv = field.children[0];
+	let highlighter = document.createElement("div");
+	highlighter.className = "highlight";
+	fieldDiv.append(highlighter);
+	
 }

@@ -65,7 +65,11 @@ public class GameController {
 	
 	@PostMapping("/placedCharacters/getMoves")
 	public ResponseEntity<List<Move>> getAvailableMoves(@RequestBody Position position) {
-		List<Move> moves = Utilities.getAvailableMoves(this.responseEntity.getMap(), this.responseEntity.getMap().getField(position).getCharacter());
+		PlayerCharacter playerCharacter = this.responseEntity.getMap().getField(position).getCharacter();
+		if(playerCharacter == null) {
+			playerCharacter = this.responseEntity.getMap().getField(position).getMonster();
+		}
+		List<Move> moves = Utilities.getAvailableMoves(this.responseEntity.getMap(), playerCharacter);
 		return ResponseEntity.ok(moves);
 	}
 	
