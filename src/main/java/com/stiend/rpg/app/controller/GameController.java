@@ -18,6 +18,7 @@ import com.stiend.rpg.app.models.MapConfiguration;
 import com.stiend.rpg.app.models.MercenaryConfiguration;
 import com.stiend.rpg.app.models.MonsterConfiguration;
 import com.stiend.rpg.app.models.Move;
+import com.stiend.rpg.app.models.PlayerMove;
 import com.stiend.rpg.app.models.RPGResponseEntity;
 import com.stiend.rpg.app.models.SorcererConfiguration;
 import com.stiend.rpg.app.models.WizardConfiguration;
@@ -57,6 +58,26 @@ public class GameController {
 		}
 		return ResponseEntity.ok(null);
 	}
+	
+	@PostMapping("/character/move")
+	public ResponseEntity<HttpStatus> movePlayer(@RequestBody PlayerMove playerMove){
+		try {
+			if(playerMove.getMoveMonster()) {
+				Monster monster = responseEntity.getMap().getField(playerMove.getCurrentField()).getMonster();
+				monster.setPosition(playerMove.getMovePosition());
+				responseEntity.getMap().getField(playerMove.getMovePosition()).setMonster(monster);
+				responseEntity.getMap().getField(playerMove.getCurrentField()).setMonster(null);
+			}else {
+				PlayerCharacter toMoveCharacter = responseEntity.getMap().getField(playerMove.getCurrentField()).getCharacter();
+				toMoveCharacter.setPosition(playerMove.getMovePosition());
+				responseEntity.getMap().getField(playerMove.getMovePosition()).setCharacter(toMoveCharacter);
+				responseEntity.getMap().getField(playerMove.getCurrentField()).setCharacter(null);
+			}
+		}catch(Exception e) {
+			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return ResponseEntity.ok(HttpStatus.OK);
+	}
 
 	@GetMapping("/info")
 	public RPGResponseEntity getInfo() {
@@ -65,12 +86,17 @@ public class GameController {
 	
 	@PostMapping("/placedCharacters/getMoves")
 	public ResponseEntity<List<Move>> getAvailableMoves(@RequestBody Position position) {
-		PlayerCharacter playerCharacter = this.responseEntity.getMap().getField(position).getCharacter();
-		if(playerCharacter == null) {
-			playerCharacter = this.responseEntity.getMap().getField(position).getMonster();
+		try {
+			PlayerCharacter playerCharacter = this.responseEntity.getMap().getField(position).getCharacter();
+			if(playerCharacter == null) {
+				playerCharacter = this.responseEntity.getMap().getField(position).getMonster();
+			}
+			List<Move> moves = Utilities.getAvailableMoves(this.responseEntity.getMap(), playerCharacter);
+			return ResponseEntity.ok(moves);
+		}catch(Exception e) {
+			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);	
 		}
-		List<Move> moves = Utilities.getAvailableMoves(this.responseEntity.getMap(), playerCharacter);
-		return ResponseEntity.ok(moves);
+		
 	}
 	
 	@PostMapping("/map")

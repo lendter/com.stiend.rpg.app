@@ -12,15 +12,19 @@ async function init() {
 			await addContent("sidebar", "sidebar bg-dark-subtle", "sidebarContent");
 			await addContent("main-content", "d-flex", "mainContent");
 			await addContent("toast-container", "toast-container position-fixed top-0 start-0 p-3", "toastContent");
-			createMapContent(map);
+			createMapContent(map, state);
 		} else if (state == "PLAY_STATE") {
 			await addContent("main-content", "d-flex", "gameContent");
-			createMapContent(map);
+			createMapContent(map, state);
 			let characters = await getRequest("round/initiative");
 			characters = JSON.parse(characters);
 			await fillInitiative(characters);
 			console.log(characters[0]);
-			getAvailableMoves(characters[0].position);
+			if(characters[0].type == "class character.Monster"){
+				getAvailableMoves(characters[0].position, true);			
+			}else{
+				getAvailableMoves(characters[0].position, false);
+			}
 		}
 	} else {
 		await addContent("sidebar", "sidebar bg-dark-subtle", "sidebarContent");
@@ -30,11 +34,11 @@ async function init() {
 
 }
 
-async function createMapContent(map) {
+async function createMapContent(map, state) {
 	let mapView = document.getElementById("map-view");
 	if (map != null) {
 		let fields = map["fields"];
-		let mapWrap = await fillMap(fields);
+		let mapWrap = await fillMap(fields, state);
 		mapView.append(mapWrap);
 	}
 }
@@ -51,7 +55,7 @@ function addContent(id, classes, template) {
 	});
 }
 
-function fillMap(fields) {
+function fillMap(fields, state) {
 	return new Promise(resolve => {
 		let mapWrap = document.createElement("div");
 		mapWrap.className = "map-container";
@@ -65,12 +69,16 @@ function fillMap(fields) {
 				let fieldDiv = document.createElement("div");
 				fieldDiv.id = x + ":" + y;
 				fieldDiv.className = "map-field";
-				fieldDiv.addEventListener("drop", (event) => drop(event), false);
-				fieldDiv.addEventListener("dragover", (event) => allowDrop(event), false);
+				if (state == "GAME_CREATION") {
+					fieldDiv.addEventListener("drop", (event) => drop(event), false);
+					fieldDiv.addEventListener("dragover", (event) => allowDrop(event), false);
+				}
 				$(fieldDiv).load("/templates/field.html", function() {
 					rowDiv.append(fieldDiv);
-					fieldDiv.addEventListener("dblclick", () => addFieldAttribute(x, y, "wall"), false);
-					fieldDiv.addEventListener("auxclick", (e) => { e.preventDefault(); removeFieldAttribute(x, y, "wall"); }, false);
+					if (state == "GAME_CREATION") {
+						fieldDiv.addEventListener("dblclick", () => addFieldAttribute(x, y, "wall"), false);
+						fieldDiv.addEventListener("auxclick", (e) => { e.preventDefault(); removeFieldAttribute(x, y, "wall"); }, false);
+					}
 					if (field["wall"] === true) {
 						fieldDiv.children[0].classList.add("wall");
 					}
@@ -124,13 +132,18 @@ async function addFieldAttribute(x, y, attribute, obj) {
 	let status = result.target.status;
 	if (obj != null && status == 200) {
 		let div = document.getElementById(x + ":" + y);
-		let img = document.createElement("img");
+		if(div.children[0].children.length == 0){
+			let img = document.createElement("img");
 		const type = attribute.charAt(0).toUpperCase() + attribute.slice(1);
 		img.className = "character";
 		img.src = "/img/" + type + "-noBackground.png";
 		div.children[0].append(img);
+		return;	
+		}
 	} else if (status == 200) {
-		document.getElementById(x + ":" + y).children[0].classList.add(attribute);
+		let field = document.getElementById(x + ":" + y);
+		field.children[0].classList.add(attribute);
+		return;
 	} else {
 		console.log("Toast");
 		const toastLiveExample = document.getElementById('exception');
@@ -312,28 +325,39 @@ async function startGame() {
 	}
 }
 
-async function getAvailableMoves(position) {
+async function getAvailableMoves(position, moveMonster) {
 	let result = await postRequest("placedCharacters/getMoves", position);
+	console.log(result);
 	let moveArr = JSON.parse(result.target.response);
 	console.log(moveArr);
 	for (moveIndex in moveArr) {
 		let move = moveArr[moveIndex];
 		console.log(move);
-		let position = move.position;
-		highlightPosition(position);
+		highlightPosition(position, move.position, moveMonster);
 	}
 }
 
-function highlightPosition(position) {
-	console.log(position.x + ":" + position.y);
-	let field = document.getElementById(position.x + ":" + position.y);
+function highlightPosition(currentPosition, movePosition, moveMonster) {
+	console.log(movePosition.x + ":" + movePosition.y);
+	let field = document.getElementById(movePosition.x + ":" + movePosition.y);
 	console.log(field);
 	let fieldDiv = field.children[0];
-
+	fieldDiv.addEventListener("dblclick", () => moveCharacter(currentPosition ,movePosition, moveMonster), false);					
 	let highlighter = document.createElement("div");
 	highlighter.className = "highlight";
 	if (fieldDiv.children.length > 0) {
 		highlighter.className = "highlight-char";
 	}
 	fieldDiv.append(highlighter);
+}
+
+async function moveCharacter(currentPosition, movePosition, moveMonster){
+	let body = {
+		"currentField": currentPosition,
+		"movePosition": movePosition,
+		"moveMonster": moveMonster
+	};
+	let response = await postRequest("character/move", body);
+	console.log(response);
+	window.location.reload();
 }
