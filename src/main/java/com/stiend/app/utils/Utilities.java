@@ -93,13 +93,19 @@ public class Utilities {
 		int x = character.getPosition().getX();
 		int y = character.getPosition().getY();
 		int movement = 2;
+		
+		boolean isMonster = false;
+		
+		if (character instanceof Monster)
+			isMonster = true;
 
-		moves = getAvailableNeighbours(map, x, y, movement, moves);
+		moves = getAvailableNeighbours(map, x, y, movement, moves, isMonster);
 
 		return moves;
 	}
 
-	public static List<Move> getAvailableNeighbours(Map map, int x, int y, int movement, List<Move> moves) {
+	public static List<Move> getAvailableNeighbours(Map map, int x, int y, int movement, List<Move> moves,
+			boolean isMonster) {
 		moves.add(new Move(x, y, movement));
 		System.out.println(x + ":" + y + " movement" + movement);
 		if (movement > 0) {
@@ -107,21 +113,25 @@ public class Utilities {
 				int newX = x + i;
 				int newY = y + i;
 				if (newX >= 0 && newX < map.getSize() && !map.getField(newX, y).isWall()) {
-					Move move = findMove(moves, newX, y);
-					if (move != null && movement - 1 > move.getMovement()) {
-						moves.remove(move);
-						moves = getAvailableNeighbours(map, newX, y, movement - 1, moves);
-					} else if (move == null) {
-						moves = getAvailableNeighbours(map, newX, y, movement - 1, moves);
+					if (!isMonster && map.getField(x, newY).getCharacter() == null) {
+						Move move = findMove(moves, newX, y);
+						if (move != null && movement - 1 > move.getMovement()) {
+							moves.remove(move);
+							moves = getAvailableNeighbours(map, newX, y, movement - 1, moves, isMonster);
+						} else if (move == null) {
+							moves = getAvailableNeighbours(map, newX, y, movement - 1, moves, isMonster);
+						}
 					}
 				}
 				if (newY >= 0 && newY < map.getSize() && !map.getField(x, newY).isWall()) {
-					Move move = findMove(moves, x, newY);
-					if (move != null && movement - 1 > move.getMovement()) {
-						moves.remove(move);
-						moves = getAvailableNeighbours(map, x, newY, movement - 1, moves);
-					} else if (move == null) {
-						moves = getAvailableNeighbours(map, x, newY, movement - 1, moves);
+					if (!isMonster && map.getField(x, newY).getCharacter() == null) {
+						Move move = findMove(moves, x, newY);
+						if (move != null && movement - 1 > move.getMovement()) {
+							moves.remove(move);
+							moves = getAvailableNeighbours(map, x, newY, movement - 1, moves, isMonster);
+						} else if (move == null) {
+							moves = getAvailableNeighbours(map, x, newY, movement - 1, moves, isMonster);
+						}
 					}
 				}
 			}
