@@ -113,19 +113,8 @@ public class Utilities {
 				int newX = x + i;
 				int newY = y + i;
 				
-				boolean checkX = false;
-				boolean checkY = false;
-
-				// Check if new X Position is free
-				if (newX >= 0 && newX < map.getSize() && !map.getField(newX, y).isWall()) {
-					if (!isMonster) {
-						if (map.getField(newX, y).getCharacter() == null) {
-							checkX = true;
-						}
-					} else {
-						checkX = true;
-					}
-				}
+				boolean checkX = checkPosition(map, newX, y, isMonster);
+				boolean checkY = checkPosition(map, x, newY, isMonster);
 
 				if (checkX == true) {
 					Move move = findMove(moves, newX, y);
@@ -134,17 +123,6 @@ public class Utilities {
 						moves = getAvailableNeighbours(map, newX, y, movement - 1, moves, isMonster);
 					} else if (move == null) {
 						moves = getAvailableNeighbours(map, newX, y, movement - 1, moves, isMonster);
-					}
-				}
-
-				// Check if new Y Position is free
-				if (newY >= 0 && newY < map.getSize() && !map.getField(x, newY).isWall()) {
-					if (!isMonster) {
-						if (map.getField(x, newY).getCharacter() == null) {
-							checkY = true;
-						}
-					} else {
-						checkY = true;
 					}
 				}
 
@@ -161,6 +139,24 @@ public class Utilities {
 			}
 		}
 		return moves;
+	}
+	
+	public static boolean checkPosition(Map map, int x, int y, boolean isMonster) {
+		
+		Field field = map.getField(x, y);
+		
+		if (x >= 0 && x < map.getSize() && !field.isWall()) {
+			if (!isMonster) {
+				if (field.getCharacter() == null) {
+					return true;
+				}
+			} else {
+				if(field.getMonster() == null) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public static Move findMove(List<Move> moves, int x, int y) {
