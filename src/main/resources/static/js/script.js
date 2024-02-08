@@ -20,9 +20,9 @@ async function init() {
 			characters = JSON.parse(characters);
 			await fillInitiative(characters);
 			console.log(characters[0]);
-			if(characters[0].type == "class character.Monster"){
-				getAvailableMoves(characters[0].position, true);			
-			}else{
+			if (characters[0].type == "class character.Monster") {
+				getAvailableMoves(characters[0].position, true);
+			} else {
 				getAvailableMoves(characters[0].position, false);
 			}
 		}
@@ -132,13 +132,13 @@ async function addFieldAttribute(x, y, attribute, obj) {
 	let status = result.target.status;
 	if (obj != null && status == 200) {
 		let div = document.getElementById(x + ":" + y);
-		if(div.children[0].children.length == 0){
+		if (div.children[0].children.length == 0) {
 			let img = document.createElement("img");
-		const type = attribute.charAt(0).toUpperCase() + attribute.slice(1);
-		img.className = "character";
-		img.src = "/img/" + type + "-noBackground.png";
-		div.children[0].append(img);
-		return;	
+			const type = attribute.charAt(0).toUpperCase() + attribute.slice(1);
+			img.className = "character";
+			img.src = "/img/" + type + "-noBackground.png";
+			div.children[0].append(img);
+			return;
 		}
 	} else if (status == 200) {
 		let field = document.getElementById(x + ":" + y);
@@ -342,16 +342,16 @@ function highlightPosition(currentPosition, movePosition, moveMonster) {
 	let field = document.getElementById(movePosition.x + ":" + movePosition.y);
 	console.log(field);
 	let fieldDiv = field.children[0];
-	fieldDiv.addEventListener("dblclick", () => moveCharacter(currentPosition ,movePosition, moveMonster), false);					
+	fieldDiv.addEventListener("dblclick", () => moveCharacter(currentPosition, movePosition, moveMonster), false);
 	let highlighter = document.createElement("div");
-	highlighter.className = "highlight";
+	highlighter.className = "highlightDiv highlight";
 	if (fieldDiv.children.length > 0) {
-		highlighter.className = "highlight-char";
+		highlighter.className = "highlightDiv highlight-char";
 	}
 	fieldDiv.append(highlighter);
 }
 
-async function moveCharacter(currentPosition, movePosition, moveMonster){
+async function moveCharacter(currentPosition, movePosition, moveMonster) {
 	let body = {
 		"currentField": currentPosition,
 		"movePosition": movePosition,
@@ -359,5 +359,16 @@ async function moveCharacter(currentPosition, movePosition, moveMonster){
 	};
 	let response = await postRequest("character/move", body);
 	console.log(response);
-	window.location.reload();
+	if (response.target.status == 200) {
+		let elements = document.getElementsByClassName("highlightDiv");
+		while (elements.length > 0) {
+			elements[0].parentNode.removeChild(elements[0]);
+		}
+		let characterDiv = document.getElementById(currentPosition.x + ":" + currentPosition.y);
+		let child = characterDiv.children[0].children[0];
+		child.parentNode.removeChild(child);
+		let moveDiv = document.getElementById(movePosition.x + ":" + movePosition.y);
+		moveDiv.children[0].append(child);
+	}
+	//window.location.reload();
 }
