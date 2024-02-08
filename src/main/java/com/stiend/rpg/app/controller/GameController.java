@@ -24,6 +24,7 @@ import com.stiend.rpg.app.models.SorcererConfiguration;
 import com.stiend.rpg.app.models.WizardConfiguration;
 
 import character.*;
+import physics.Field;
 import physics.Map;
 import physics.Position;
 
@@ -31,6 +32,7 @@ import physics.Position;
 @RequestMapping("/api/game")
 public class GameController {
 	private RPGResponseEntity responseEntity = new RPGResponseEntity();
+	private List<PlayerCharacter> initiativeList;
 
 	@GetMapping("/placedCharacters")
 	public ResponseEntity<List<PlayerCharacter>> getCharacters() {
@@ -51,31 +53,27 @@ public class GameController {
 
 	@GetMapping("/round/initiative")
 	public ResponseEntity<List<PlayerCharacter>> getInitiative() {
-		if (this.responseEntity.getMap() != null) {
-			List<PlayerCharacter> characters = Utilities.getPlacedCharacters(this.responseEntity.getMap());
-			characters.sort(new DexterityComparator());
-			return ResponseEntity.ok(characters);
-		}
-		return ResponseEntity.ok(null);
+		return ResponseEntity.ok(initiativeList);
 	}
 	
 	@PostMapping("/character/move")
-	public ResponseEntity<HttpStatus> movePlayer(@RequestBody PlayerMove playerMove){
-		try {
-			if(playerMove.getMoveMonster()) {
-				Monster monster = responseEntity.getMap().getField(playerMove.getCurrentField()).getMonster();
-				monster.setPosition(playerMove.getMovePosition());
-				responseEntity.getMap().getField(playerMove.getMovePosition()).setMonster(monster);
-				responseEntity.getMap().getField(playerMove.getCurrentField()).setMonster(null);
-			}else {
-				PlayerCharacter toMoveCharacter = responseEntity.getMap().getField(playerMove.getCurrentField()).getCharacter();
-				toMoveCharacter.setPosition(playerMove.getMovePosition());
-				responseEntity.getMap().getField(playerMove.getMovePosition()).setCharacter(toMoveCharacter);
-				responseEntity.getMap().getField(playerMove.getCurrentField()).setCharacter(null);
-			}
-		}catch(Exception e) {
-			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	public ResponseEntity<HttpStatus> movePlayer(@RequestBody Position newPos){
+		PlayerCharacter character = initiativeList.get(0);
+		
+		Field oldField= responseEntity.getMap().getField(character.getPosition());
+		Field newField = responseEntity.getMap().getField(newPos);
+		
+		if(character instanceof Monster) {
+			oldField.setMonster(null);
+			newField.setMonster((Monster) character);
+		} else 
+		{
+			oldField.setCharacter(null);
+			newField.setCharacter(character);
 		}
+		
+		initiativeList.remove(character);
+		initiativeList.add(character);
 		return ResponseEntity.ok(HttpStatus.OK);
 	}
 
@@ -110,6 +108,8 @@ public class GameController {
 	@PostMapping("/start")
 	public RPGResponseEntity startGame() {
 		responseEntity.setState(GameState.PLAY_STATE);
+		initiativeList = Utilities.getPlacedCharacters(this.responseEntity.getMap());
+		initiativeList.sort(new DexterityComparator());
 		return responseEntity;
 	}
 
