@@ -43,60 +43,64 @@ public class GameController {
 
 	@GetMapping("/placedCharacters/hasPlayer")
 	public ResponseEntity<Boolean> hasPlayerCharacter() {
-			return ResponseEntity.ok(Utilities.hasPlayerCharacter(this.responseEntity.getMap()));
+		return ResponseEntity.ok(Utilities.hasPlayerCharacter(this.responseEntity.getMap()));
 	}
 
 	@GetMapping("/placedCharacters/hasMonster")
 	public ResponseEntity<Boolean> hasMonster() {
-			return ResponseEntity.ok(Utilities.hasMonster(this.responseEntity.getMap()));
+		return ResponseEntity.ok(Utilities.hasMonster(this.responseEntity.getMap()));
 	}
 
 	@GetMapping("/round/initiative")
 	public ResponseEntity<List<PlayerCharacter>> getInitiative() {
 		return ResponseEntity.ok(initiativeList);
 	}
-	
+
 	@PostMapping("/character/move")
-	public ResponseEntity<HttpStatus> movePlayer(@RequestBody Position newPos){
-		PlayerCharacter character = initiativeList.get(0);
-		
-		Field oldField= responseEntity.getMap().getField(character.getPosition());
-		Field newField = responseEntity.getMap().getField(newPos);
-		
-		if(character instanceof Monster) {
-			oldField.setMonster(null);
-			newField.setMonster((Monster) character);
-		} else 
-		{
-			oldField.setCharacter(null);
-			newField.setCharacter(character);
+	public ResponseEntity<HttpStatus> movePlayer(@RequestBody Position newPos) {
+		try {
+			PlayerCharacter character = initiativeList.get(0);
+
+			Field oldField = responseEntity.getMap().getField(character.getPosition());
+			Field newField = responseEntity.getMap().getField(newPos);
+
+			if (character instanceof Monster) {
+				oldField.setMonster(null);
+				newField.setMonster((Monster) character);
+			} else {
+				oldField.setCharacter(null);
+				newField.setCharacter(character);
+			}
+			character.setPosition(newPos);
+
+			initiativeList.remove(character);
+			initiativeList.add(character);
+			return ResponseEntity.ok(HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
-		initiativeList.remove(character);
-		initiativeList.add(character);
-		return ResponseEntity.ok(HttpStatus.OK);
 	}
 
 	@GetMapping("/info")
 	public RPGResponseEntity getInfo() {
 		return this.responseEntity;
 	}
-	
+
 	@PostMapping("/placedCharacters/getMoves")
 	public ResponseEntity<List<Move>> getAvailableMoves(@RequestBody Position position) {
 		try {
 			PlayerCharacter playerCharacter = this.responseEntity.getMap().getField(position).getCharacter();
-			if(playerCharacter == null) {
+			if (playerCharacter == null) {
 				playerCharacter = this.responseEntity.getMap().getField(position).getMonster();
 			}
 			List<Move> moves = Utilities.getAvailableMoves(this.responseEntity.getMap(), playerCharacter);
 			return ResponseEntity.ok(moves);
-		}catch(Exception e) {
-			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);	
+		} catch (Exception e) {
+			return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
+
 	}
-	
+
 	@PostMapping("/map")
 	public void createMap(@RequestBody MapConfiguration configuration) {
 		System.out.println(configuration.getSize());

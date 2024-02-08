@@ -333,16 +333,16 @@ async function getAvailableMoves(position, moveMonster) {
 	for (moveIndex in moveArr) {
 		let move = moveArr[moveIndex];
 		console.log(move);
-		highlightPosition(position, move.position, moveMonster);
+		highlightPosition(position, move.position);
 	}
 }
 
-function highlightPosition(currentPosition, movePosition, moveMonster) {
+function highlightPosition(currentPosition, movePosition) {
 	console.log(movePosition.x + ":" + movePosition.y);
 	let field = document.getElementById(movePosition.x + ":" + movePosition.y);
 	console.log(field);
 	let fieldDiv = field.children[0];
-	fieldDiv.addEventListener("dblclick", () => moveCharacter(currentPosition, movePosition, moveMonster), false);
+	fieldDiv.addEventListener("dblclick", () => moveCharacter(currentPosition, movePosition), false);
 	let highlighter = document.createElement("div");
 	highlighter.className = "highlightDiv highlight";
 	if (fieldDiv.children.length > 0) {
@@ -351,12 +351,9 @@ function highlightPosition(currentPosition, movePosition, moveMonster) {
 	fieldDiv.append(highlighter);
 }
 
-async function moveCharacter(currentPosition, movePosition, moveMonster) {
-	let body = {
-		"currentField": currentPosition,
-		"movePosition": movePosition,
-		"moveMonster": moveMonster
-	};
+async function moveCharacter(currentPosition, movePosition) {
+	let body =
+		movePosition
 	let response = await postRequest("character/move", body);
 	console.log(response);
 	if (response.target.status == 200) {
