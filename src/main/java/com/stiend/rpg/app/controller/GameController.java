@@ -18,7 +18,6 @@ import com.stiend.rpg.app.models.MapConfiguration;
 import com.stiend.rpg.app.models.MercenaryConfiguration;
 import com.stiend.rpg.app.models.MonsterConfiguration;
 import com.stiend.rpg.app.models.Move;
-import com.stiend.rpg.app.models.PlayerMove;
 import com.stiend.rpg.app.models.RPGResponseEntity;
 import com.stiend.rpg.app.models.SorcererConfiguration;
 import com.stiend.rpg.app.models.WizardConfiguration;
@@ -67,9 +66,15 @@ public class GameController {
 			if (character instanceof Monster) {
 				oldField.setMonster(null);
 				newField.setMonster((Monster) character);
+				if(newField.getCharacter() != null) {
+					Utilities.calculateFight(initiativeList, newField, newField.getCharacter(), (Monster) character);
+				}
 			} else {
 				oldField.setCharacter(null);
 				newField.setCharacter(character);
+				if(newField.getMonster() != null) {
+					Utilities.calculateFight(initiativeList, newField, character, newField.getMonster());
+				}
 			}
 			character.setPosition(newPos);
 

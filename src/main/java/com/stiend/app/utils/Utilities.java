@@ -168,4 +168,39 @@ public class Utilities {
 		}
 		return null;
 	}
+	
+	public static void calculateFight(List<PlayerCharacter> initiativeList, Field field, PlayerCharacter player, Monster monster) {
+		PlayerCharacter loser = fight(player, monster);
+		
+		if(loser instanceof Monster) {
+			field.setMonster(null);
+		} else {
+			field.setCharacter(null);
+		}
+		
+		initiativeList.remove(loser);
+	}
+	
+	public static PlayerCharacter fight(PlayerCharacter player, Monster monster) {
+	 int playerSpeed = player.getDexterity();
+	 int monsterSpeed = monster.getDexterity();
+	 
+	 PlayerCharacter first;
+	 PlayerCharacter second;
+	 
+	 if(playerSpeed < monsterSpeed) {
+		 first = monster;
+		 second = player;
+	 } else {
+		 first = player;
+		 second = monster;
+	 }
+	 
+	 while(player.getHp() > 0 && monster.getHp() > 0) {
+		 first.attack(second);
+		 second.attack(first);
+	 }
+	 
+	 return monster.getHp() <= 0 ? player : monster;
+	}
 }
